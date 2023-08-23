@@ -1,4 +1,4 @@
-import { FormControl, ValidationErrors } from "@angular/forms";
+import { FormControl, FormGroup, ValidationErrors } from "@angular/forms";
 
 export const getValidatorErrorMessage = (validatorName: string, validatorErrors?: ValidationErrors): string | undefined => {
     let args = messages.get(validatorName)?.validatorErrorsKey?.map(name => validatorErrors?.[name]);
@@ -12,6 +12,11 @@ const messages = new Map<string, { message: string, validatorErrorsKey?: string[
     ['email', { message: 'Email must be a valid email address' }],
     ['pattern', { message: 'Password must have at least one number and one symbol' }],
     ['patternPhoneNumber', { message: 'Phone number must be exactly 10 digits long' }],
+    ['requiredTrue', { message: 'Gender must be selected' }],
+    ['ageRange', { message: 'Age range must be between 18 and 50', validatorErrorsKey: ['min', 'max'] }],
+    ['passwordMismatch', { message: 'Passwords do not match' }],
+    
+
 ]);
 
 function stringFormat(template: string | undefined, ...args: any[]) {
@@ -26,9 +31,28 @@ function stringFormat(template: string | undefined, ...args: any[]) {
 }
 
 export const customValidators = {
-    patternPhoneNumber: /^[0-9]{10}$/
+    patternPhoneNumber: /^[0-9]{10}$/,
+    ageRange: (min: number, max: number) => {
+        return (control: FormControl): ValidationErrors | null => {
+            if (control.value && (control.value < min || control.value > max)) {
+                return { 'ageRange': true };
+            }
+            return null;
+        };
+    },
+
 };
 
+export function confirmPasswordValidator(control: FormControl): ValidationErrors | null {
+    const form = control.parent as FormGroup;
+    if (form) {
+        const passwordControl = form.get('password');
+        if (passwordControl && control.value !== passwordControl.value) {
+            return { 'passwordMismatch': true };
+        }
+    }
+    return null;
+}
 export function phoneNumberValidator(control: FormControl): ValidationErrors | null {
     // !customValidators.patternPhoneNumber.test(control.value)
     if (control.value && control.value.length != 10) {

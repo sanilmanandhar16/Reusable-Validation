@@ -2,7 +2,7 @@
 <div class="panel">
     <form [formGroup]="userForm">
   
-      <h1>Validation Task</h1>
+      <h1>User Details</h1>
       <hr>
       <div>
    
@@ -21,24 +21,22 @@
             <input type="email" id="email" formControlName="email">
             <app-error-messages class="error-message" [control]="userForm.get('email')!"></app-error-messages>
           </div>
-          <!-- <div>
-            <label for="phone">Contact:</label>
-            <input type="phone" id="phone" formControlName="phone">
-            <app-error-messages class="error-message" [control]="userForm.get('phone')!"></app-error-messages>
-          </div>
-          <div>
-            <label for="address">Address:</label>
-            <input type="text" id="address" formControlName="address">
-            <app-error-messages class="error-message" [control]="userForm.get('address')!"></app-error-messages>
-          </div> -->
+          
           <div>
             <label for="password">Password:</label>
             <input type="password" id="password" formControlName="password">
             <app-error-messages class="error-message" [control]="userForm.get('password')!"></app-error-messages>
           </div>
+
+          <div>
+            <label for="confirmPassword">ConfirmPassword:</label>
+            <input type="password" id="confirmPassword" formControlName="confirmPassword">
+            <app-error-messages class="error-message" [control]="userForm.get('confirmPassword')!"></app-error-messages>
+          </div>
+
           <button type="submit" [disabled]="!userForm.valid">Submit</button>
       </div>
     </form>
-    <button (click)="next()">Go to Next Component</button>
+    <button (click)="next()">Go To Next Page</button>
   </div>
 

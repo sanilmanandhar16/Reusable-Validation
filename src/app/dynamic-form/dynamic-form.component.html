@@ -2,7 +2,7 @@
 <div class="panel">
     <form [formGroup]="userForm">
   
-      <h1>Validation Task</h1>
+      <h1>User Details</h1>
       <hr>
       <div>
    
@@ -32,9 +32,25 @@
             <app-error-messages class="error-message" [control]="userForm.get('address')!"></app-error-messages>
           </div>
           <div>
-            <label for="password">Password:</label>
-            <input type="password" id="password" formControlName="password">
-            <app-error-messages class="error-message" [control]="userForm.get('password')!"></app-error-messages>
+            <label for="age">Age:</label>
+            <input type="number" id="age" formControlName="age">
+            <app-error-messages class="error-message" [control]="userForm.get('age')!"></app-error-messages>
+          </div>
+          <hr>
+          <div class="gender">
+            <label for="gender">Gender:</label>
+            <div>
+              <label>
+                <input type="checkbox" style="margin-right: 15px;" id="gender" formControlName="gender"> Male
+              </label>
+            </div>
+            <div>
+              <label>
+                <input type="checkbox" id="gender" formControlName="gender"> Female
+              </label>
+            </div>
+            <br>
+            <app-error-messages class="error-message" [control]="userForm.get('gender')!"></app-error-messages>
           </div>
           <button type="submit" [disabled]="!userForm.valid">Submit</button>
       </div>

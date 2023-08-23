@@ -1,7 +1,7 @@
 
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { phoneNumberValidator } from '../validators-utils';
+import { confirmPasswordValidator, phoneNumberValidator } from '../validators-utils';
 import { Router } from '@angular/router';
 @Component({
   selector: 'app-home',
@@ -29,7 +29,8 @@ export class HomeComponent {
           Validators.pattern(/.*[0-9].*/),
           Validators.pattern(/.*[!@#$%^&*].*/)
         ]
-      ]
+      ],
+      confirmPassword: ['', [Validators.required, confirmPasswordValidator]],
     });
   }
   next(){
