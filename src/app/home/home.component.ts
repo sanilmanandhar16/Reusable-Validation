@@ -1,12 +1,21 @@
-
 import { Component, inject } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { confirmPasswordValidator, phoneNumberValidator } from '../validators-utils';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  confirmPasswordValidator,
+  phoneNumberValidator,
+  usernameValidator,
+  passwordUppercaseLowercaseValidator,
+  emailAsyncValidator,
+  usernameAsyncValidator,
+  customValidators,
+
+} from '../validators-utils';
+
 import { Router } from '@angular/router';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent {
   title = 'test-app';
@@ -14,10 +23,21 @@ export class HomeComponent {
   fb: FormBuilder = inject(FormBuilder);
 
   constructor(private router: Router) {
+    
+    const usedEmails = ['sanil@gmail.com', 'ram@gmail.com'];
+    const usedNames = ['Sanil', 'Ram'];
+
     this.userForm = this.fb.group({
-      firstname: ['', Validators.required],
-      lastname: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
+      username: [
+        '',
+        [Validators.required, usernameValidator],
+        [usernameAsyncValidator(usedNames)],
+      ],
+      email: [
+        '',
+        [Validators.required, Validators.email],
+        [emailAsyncValidator(usedEmails)],
+      ],
       address: ['', Validators.required],
       phone: ['', [Validators.required, phoneNumberValidator]],
       password: [
@@ -27,13 +47,34 @@ export class HomeComponent {
           Validators.minLength(8),
           Validators.maxLength(16),
           Validators.pattern(/.*[0-9].*/),
-          Validators.pattern(/.*[!@#$%^&*].*/)
-        ]
+          Validators.pattern(/.*[!@#$%^&*].*/),
+          passwordUppercaseLowercaseValidator,
+        ],
       ],
       confirmPassword: ['', [Validators.required, confirmPasswordValidator]],
-    });
+     
+      startDate: ['', Validators.required],
+      endDate: ['', Validators.required]
+    }, { validator: customValidators.dateRangeValidator() });
+  
   }
-  next(){
-    this.router.navigate(['/dynamic'])
+
+  next() {
+    this.router.navigate(['/dynamic']);
+  }
+
+  onSubmit() {
+
+    console.log('Start Date:', this.userForm.get('startDate')?.value);
+    console.log('End Date:', this.userForm.get('endDate')?.value);
+ 
+    if (this.userForm.valid) {
+      console.log('Form submitted successfully');
+    } else {
+      Object.values(this.userForm.controls).forEach((control) => {
+        control.markAsTouched();
+      });
+      console.log('Form isnot valid');
+    }
   }
 }

@@ -9,23 +9,16 @@ import { NgIf } from '@angular/common';
 import { DynamicFormComponent } from './dynamic-form/dynamic-form.component';
 import { HomeComponent } from './home/home.component';
 
-
 @NgModule({
-  declarations: [
-    AppComponent,
-    DynamicFormComponent,
-    HomeComponent,
- 
-    
-  ],
+  declarations: [AppComponent, DynamicFormComponent, HomeComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
     NgIf,
-    ErrorMessagesComponent
+    ErrorMessagesComponent,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
