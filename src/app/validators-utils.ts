@@ -26,7 +26,7 @@ const messages = new Map<string, { message: string, validatorErrorsKey?: string[
     ['ageRange', { message: 'Age must be between 18 and 99', validatorErrorsKey: ['min', 'max'] }],
     ['emailTaken', {message: 'Email already Exists'}],
     ['usernameTaken', {message:'Username already Exists'}],
-    ['invalidDateRange', { message: 'End date must be after start date' }], 
+    ['invalidDateRange', { message: 'End date must be selected after start date' }],
   
 ]);
 
@@ -41,6 +41,10 @@ function stringFormat(template: string | undefined, ...args: any[]) {
     return undefined;
 }
 
+export const customValidators = {
+  patternPhoneNumber: /^[0-9]{10}$/,
+  dateRangeValidator: () => dateRangeValidator,
+};
 
 export function usernameValidator (control: FormControl): ValidationErrors | null  {
       const value = control.value;
@@ -51,40 +55,31 @@ export function usernameValidator (control: FormControl): ValidationErrors | nul
      if (!/^[A-Z][a-zA-Z]*$/.test(value)) {
         return { 'invalidUsername': true };
       }
-  
       return null;
     };
   
+    
+export function dateRangeValidator(controlName1: string, controlName2: string): ValidatorFn {
+  return (formGroup: AbstractControl): ValidationErrors | null => {
+    const control1 = formGroup.get(controlName1);
+    const control2 = formGroup.get(controlName2);
 
-export const customValidators = {
-    patternPhoneNumber: /^[0-9]{10}$/,
-    dateRangeValidator: dateRangeValidator
-  
-};
+    if (control1 && control2) {
+      const startDate = control1.value;
+      const endDate = control2.value;
 
-export function dateRangeValidator() {
-  return (control: FormControl): ValidationErrors | null => {
-
-    const from = control.get("startDate")?.value;
-    const to = control.get("endDate")?.value;
-
-    if (from && to && new Date(from) > new Date(to)) {
-      return { invalidDateRange: true };
+      if (startDate && endDate && new Date(startDate) > new Date(endDate)) {
+        control2.setErrors({ 'invalidDateRange': true });
+      } else {
+        control2.setErrors(null);
+      }
     }
+
     return null;
   };
 }
-export function ageRangeValidator(min: number, max: number) {
-    return (control: FormControl): ValidationErrors | null => {
-      const age = +control.value;
-      if (age < min || age > max) {
-        return { 'ageRange': true };
-      }
-      return null;
-    };
-  }
 
-  export function passwordUppercaseLowercaseValidator(control: FormControl): ValidationErrors | null {
+export function passwordUppercaseLowercaseValidator(control: FormControl): ValidationErrors | null {
     const password = control.value;
     if (password && !/[a-z]/.test(password)) {
       return { 'passwordUppercaseLowercase': true };
@@ -95,6 +90,16 @@ export function ageRangeValidator(min: number, max: number) {
     return null;
   }
   
+  export function ageRangeValidator(min: number, max: number) {
+    return (control: FormControl): ValidationErrors | null => {
+      const age = +control.value;
+      if (age < min || age > max) {
+        return { 'ageRange': true };
+      }
+      return null;
+    };
+  }
+
 export function confirmPasswordValidator(control: FormControl): ValidationErrors | null {
     const form = control.parent as FormGroup;
     if (form) {
@@ -105,6 +110,7 @@ export function confirmPasswordValidator(control: FormControl): ValidationErrors
     }
     return null;
 }
+
 export function phoneNumberValidator(control: FormControl): ValidationErrors | null {
     if (control.value && control.value.length != 10) {
         return { 'patternPhoneNumber': true };
@@ -144,14 +150,3 @@ export function emailAsyncValidator(existingEmails: string[]): (control: FormCon
         )
     }
   }
-
-  // export function dateRangeValidator(control: FormGroup): ValidationErrors | null {
-  //   const startDate = control.get('startDate')?.value;
-  //   const endDate = control.get('endDate')?.value;
-  
-  //   if (startDate && endDate && startDate > endDate) {
-  //     return { 'invalidDateRange': true };
-  //   }
-  
-  //   return null;
-  // }

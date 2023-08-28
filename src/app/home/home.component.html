@@ -1,5 +1,5 @@
 <div class="panel">
-  <form [formGroup]="userForm" >
+  <form [formGroup]="userForm">
 
     <h1>User Details</h1>
     <hr>
@@ -9,27 +9,23 @@
         <input type="text" id="username" formControlName="username">
         <app-error-messages class="error-message" [control]="userForm.get('username')!"></app-error-messages>
       </div>
-
-     
       <div>
         <label for="email">Email:</label>
         <input type="email" id="email" formControlName="email">
         <app-error-messages class="error-message" [control]="userForm.get('email')!"></app-error-messages>
-    </div>
-    
-    
-    <div>
-      <label for="startDate">Start Date:</label>
-      <input type="date" id="startDate" formControlName="startDate">
-      <app-error-messages class="error-message" [control]="userForm.get('startDate')!"></app-error-messages>
-    </div>
-    
-    <div>
-      <label for="endDate">End Date:</label>
-      <input type="date" id="endDate" formControlName="endDate">
-      <app-error-messages class="error-message" [control]="userForm.get('endDate')!"></app-error-messages>
-    </div>
-    
+      </div>
+
+      <div>
+        <label for="startDate">Start Date:</label>
+        <input type="date" id="startDate" formControlName="startDate">
+        <app-error-messages class="error-message" [control]="userForm.get('startDate')!"></app-error-messages>
+      </div>
+      <div>
+        <label for="endDate">End Date:</label>
+        <input type="date" id="endDate" formControlName="endDate">
+        <app-error-messages class="error-message" [control]="userForm.get('endDate')!"></app-error-messages>
+      </div>
+
 
       <div>
         <label for="password">Password:</label>

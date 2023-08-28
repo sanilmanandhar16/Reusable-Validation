@@ -7,8 +7,7 @@ import {
   passwordUppercaseLowercaseValidator,
   emailAsyncValidator,
   usernameAsyncValidator,
-  customValidators,
-
+  dateRangeValidator,
 } from '../validators-utils';
 
 import { Router } from '@angular/router';
@@ -23,7 +22,6 @@ export class HomeComponent {
   fb: FormBuilder = inject(FormBuilder);
 
   constructor(private router: Router) {
-    
     const usedEmails = ['sanil@gmail.com', 'ram@gmail.com'];
     const usedNames = ['Sanil', 'Ram'];
 
@@ -52,29 +50,26 @@ export class HomeComponent {
         ],
       ],
       confirmPassword: ['', [Validators.required, confirmPasswordValidator]],
-     
       startDate: ['', Validators.required],
-      endDate: ['', Validators.required]
-    }, { validator: customValidators.dateRangeValidator() });
-  
+      endDate: ['', Validators.required],
+    });
+    this.userForm.setValidators(dateRangeValidator('startDate', 'endDate'));
+  }
+
+  onSubmit() {
+ if (this.userForm.valid) {
+      console.log('Form submitted successfully');
+    } else {
+      Object.values(this.userForm.controls).forEach((control) => {
+        control.markAsTouched();
+      });
+      console.log('Form is not valid');
+    }
   }
 
   next() {
     this.router.navigate(['/dynamic']);
   }
 
-  onSubmit() {
-
-    console.log('Start Date:', this.userForm.get('startDate')?.value);
-    console.log('End Date:', this.userForm.get('endDate')?.value);
- 
-    if (this.userForm.valid) {
-      console.log('Form submitted successfully');
-    } else {
-      Object.values(this.userForm.controls).forEach((control) => {
-        control.markAsTouched();
-      });
-      console.log('Form isnot valid');
-    }
-  }
 }
+
