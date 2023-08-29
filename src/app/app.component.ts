@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { phoneNumberValidator } from './validators-utils';
+// import { phoneNumberValidator } from './validators-utils';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -17,7 +17,7 @@ export class AppComponent {
       lastname: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       address: ['', Validators.required],
-      phone: ['', [Validators.required, phoneNumberValidator]],
+      // phone: ['', [Validators.required, phoneNumberValidator]],
       password: [
         '',
         [

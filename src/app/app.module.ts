@@ -10,13 +10,13 @@ import { DynamicFormComponent } from './dynamic-form/dynamic-form.component';
 import { HomeComponent } from './home/home.component';
 
 @NgModule({
-  declarations: [AppComponent, DynamicFormComponent, HomeComponent],
+  declarations: [AppComponent, DynamicFormComponent, HomeComponent,ErrorMessagesComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
     NgIf,
-    ErrorMessagesComponent,
+    
   ],
   providers: [],
   bootstrap: [AppComponent],

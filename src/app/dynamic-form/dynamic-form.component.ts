@@ -1,7 +1,7 @@
 
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ageRangeValidator, customValidators, phoneNumberValidator } from '../validators-utils';
+// import { ageRangeValidator, customValidators, phoneNumberValidator } from '';
 import { Router } from '@angular/router';
 
 @Component({
@@ -19,9 +19,9 @@ export class DynamicFormComponent {
       lastname: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       address: ['', Validators.required],
-      phone: ['', [Validators.required, phoneNumberValidator]],
+      // phone: ['', [Validators.required, phoneNumberValidator]],
       gender: [false, Validators.requiredTrue],
-      age: ['', [Validators.required, ageRangeValidator(18, 99)]],
+      // age: ['', [Validators.required, ageRangeValidator(18, 99)]],
 
     });
   }

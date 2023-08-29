@@ -1,16 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import {
-  confirmPasswordValidator,
-  phoneNumberValidator,
-  usernameValidator,
-  passwordUppercaseLowercaseValidator,
-  emailAsyncValidator,
-  usernameAsyncValidator,
-  dateRangeValidator,
-} from '../validators-utils';
-
 import { Router } from '@angular/router';
+import { ValidationService } from '../validation.service'; 
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -19,21 +11,27 @@ import { Router } from '@angular/router';
 export class HomeComponent {
   title = 'test-app';
   userForm!: FormGroup;
-  fb: FormBuilder = inject(FormBuilder);
 
-  constructor(private router: Router) {
+  constructor(
+    private router: Router,
+    private fb: FormBuilder, 
+    private validationService: ValidationService 
+  ) {
     const usedEmails = ['sanil@gmail.com', 'ram@gmail.com'];
     const usedNames = ['Sanil', 'Ram'];
 
     this.userForm = this.fb.group({
-      username: ['', [usernameValidator], [usernameAsyncValidator(usedNames)]],
+      username: [
+        '', 
+        [Validators.required, validationService.usernameValidator],
+        [this.validationService.usernameAsyncValidator(usedNames)]],
       email: [
         '',
         [Validators.required, Validators.email],
-        [emailAsyncValidator(usedEmails)],
+        [this.validationService.emailAsyncValidator(usedEmails)], 
       ],
 
-      phone: ['', [Validators.required, phoneNumberValidator]],
+      phone: ['', [Validators.required, this.validationService.phoneNumberValidator]],
       password: [
         '',
         [
@@ -42,14 +40,16 @@ export class HomeComponent {
           Validators.maxLength(16),
           Validators.pattern(/.*[0-9].*/),
           Validators.pattern(/.*[!@#$%^&*].*/),
-          passwordUppercaseLowercaseValidator,
+          this.validationService.passwordUppercaseLowercaseValidator,
         ],
       ],
-      confirmPassword: ['', [Validators.required, confirmPasswordValidator]],
+      confirmPassword: ['', [Validators.required, this.validationService.confirmPasswordValidator]],
       startDate: ['', Validators.required],
       endDate: ['', Validators.required],
     });
-    this.userForm.setValidators(dateRangeValidator('startDate', 'endDate'));
+    this.userForm.setValidators(
+      this.validationService.dateRangeValidator('startDate', 'endDate')
+    );
   }
 
   get usernameValidationMessage(): string | undefined {
@@ -63,9 +63,9 @@ export class HomeComponent {
     return undefined;
   }
 
-
   onSubmit() {
     if (this.userForm.valid) {
+    
     } else {
       Object.values(this.userForm.controls).forEach((control) => {
         control.markAsTouched();
@@ -77,3 +77,4 @@ export class HomeComponent {
     this.router.navigate(['/dynamic']);
   }
 }
+
