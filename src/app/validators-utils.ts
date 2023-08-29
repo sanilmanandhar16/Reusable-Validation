@@ -9,8 +9,7 @@ export const getValidatorErrorMessage = (validatorName: string, validatorErrors?
       return args ? stringFormat(messageConfig.message, ...args) : messageConfig.message;
   }
   return undefined;
-};
-
+  };
 
 const messages = new Map<string, { message: string, validatorErrorsKey?: string[] }>([
     ['required', { message: 'This field is required' }],
@@ -28,7 +27,7 @@ const messages = new Map<string, { message: string, validatorErrorsKey?: string[
     ['usernameTaken', {message:'Username already Exists'}],
     ['invalidDateRange', { message: 'End date must be selected after start date' }],
   
-]);
+  ]);
 
 function stringFormat(template: string | undefined, ...args: any[]) {
     if (template) { 
@@ -39,12 +38,12 @@ function stringFormat(template: string | undefined, ...args: any[]) {
         });
     }
     return undefined;
-}
+  }
 
 export const customValidators = {
   patternPhoneNumber: /^[0-9]{10}$/,
   dateRangeValidator: () => dateRangeValidator,
-};
+  };
 
 export function usernameValidator (control: FormControl): ValidationErrors | null  {
       const value = control.value;
@@ -59,6 +58,19 @@ export function usernameValidator (control: FormControl): ValidationErrors | nul
     };
   
     
+export function usernameAsyncValidator(existingNames: string[]): (control: FormControl) => Observable <ValidationErrors | null>{
+      return (control: FormControl): Observable<ValidationErrors | null> =>{
+          return of (control.value).pipe(
+              map(username =>{
+                if(existingNames.includes(username)){
+                  return{ 'usernameTaken': true};
+                  }
+                  return null;
+              })
+          )
+      }
+    }
+  
 export function dateRangeValidator(controlName1: string, controlName2: string): ValidatorFn {
   return (formGroup: AbstractControl): ValidationErrors | null => {
     const control1 = formGroup.get(controlName1);
@@ -74,10 +86,9 @@ export function dateRangeValidator(controlName1: string, controlName2: string): 
         control2.setErrors(null);
       }
     }
-
     return null;
   };
-}
+  }
 
 export function passwordUppercaseLowercaseValidator(control: FormControl): ValidationErrors | null {
     const password = control.value;
@@ -90,7 +101,14 @@ export function passwordUppercaseLowercaseValidator(control: FormControl): Valid
     return null;
   }
   
-  export function ageRangeValidator(min: number, max: number) {
+export function phoneNumberValidator(control: FormControl): ValidationErrors | null {
+    if (control.value && control.value.length != 10) {
+        return { 'patternPhoneNumber': true };
+    }
+    return null;
+  }
+
+export function ageRangeValidator(min: number, max: number) {
     return (control: FormControl): ValidationErrors | null => {
       const age = +control.value;
       if (age < min || age > max) {
@@ -109,44 +127,21 @@ export function confirmPasswordValidator(control: FormControl): ValidationErrors
         }
     }
     return null;
-}
+  }
 
-export function phoneNumberValidator(control: FormControl): ValidationErrors | null {
-    if (control.value && control.value.length != 10) {
-        return { 'patternPhoneNumber': true };
-    }
-    return null;
-}
 
 export function emailAsyncValidator(existingEmails: string[]): (control: FormControl) => Observable<ValidationErrors | null> {
     return (control: FormControl): Observable<ValidationErrors | null> => {
       return of(control.value).pipe(
-
         map(email => {
-          console.log('Checking email:', email); 
           if (existingEmails.includes(email)) {
             console.log('Email exists:', email); 
             return { 'emailTaken': true };
           }
-          console.log("Email doesnot Exist")
           return null;
         })
       );
     };
   }
   
-  export function usernameAsyncValidator(existingNames: string[]): (control: FormControl) => Observable <ValidationErrors | null>{
-    return (control: FormControl): Observable<ValidationErrors | null> =>{
-        return of (control.value).pipe(
-            delay(1000),
-            map(username =>{
-                console.log('Checking user name: ', username)
-                if(existingNames.includes(username)){
-                    console.log('Username Exists: ', username);
-                    return{ 'usernameTaken': true};
-                }
-                return null;
-            })
-        )
-    }
-  }
+ 

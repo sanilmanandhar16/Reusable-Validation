@@ -7,14 +7,24 @@
       <div>
         <label for="username">User Name:</label>
         <input type="text" id="username" formControlName="username">
-        <app-error-messages class="error-message" [control]="userForm.get('username')!"></app-error-messages>
+        <app-error-messages
+        class="error-message"
+        [control]="userForm.get('username')!"
+        [validationMessage]="usernameValidationMessage"
+      ></app-error-messages>
+
       </div>
       <div>
         <label for="email">Email:</label>
         <input type="email" id="email" formControlName="email">
-        <app-error-messages class="error-message" [control]="userForm.get('email')!"></app-error-messages>
+        <app-error-messages class="error-message"
+        [control]="userForm.get('email')!"
+        
+        ></app-error-messages> 
       </div>
 
+
+     
       <div>
         <label for="startDate">Start Date:</label>
         <input type="date" id="startDate" formControlName="startDate">

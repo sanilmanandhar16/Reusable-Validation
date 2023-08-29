@@ -26,17 +26,13 @@ export class HomeComponent {
     const usedNames = ['Sanil', 'Ram'];
 
     this.userForm = this.fb.group({
-      username: [
-        '',
-        [Validators.required, usernameValidator],
-        [usernameAsyncValidator(usedNames)],
-      ],
+      username: ['', [usernameValidator], [usernameAsyncValidator(usedNames)]],
       email: [
         '',
         [Validators.required, Validators.email],
         [emailAsyncValidator(usedEmails)],
       ],
-      address: ['', Validators.required],
+
       phone: ['', [Validators.required, phoneNumberValidator]],
       password: [
         '',
@@ -56,20 +52,28 @@ export class HomeComponent {
     this.userForm.setValidators(dateRangeValidator('startDate', 'endDate'));
   }
 
+  get usernameValidationMessage(): string | undefined {
+    const usernameControl = this.userForm.get('username');
+    if (usernameControl && usernameControl.touched) {
+      const username = usernameControl.value;
+      if (username.length <= 2) {
+        return 'The entered username is too short.';
+      }
+    }
+    return undefined;
+  }
+
+
   onSubmit() {
- if (this.userForm.valid) {
-      console.log('Form submitted successfully');
+    if (this.userForm.valid) {
     } else {
       Object.values(this.userForm.controls).forEach((control) => {
         control.markAsTouched();
       });
-      console.log('Form is not valid');
     }
   }
 
   next() {
     this.router.navigate(['/dynamic']);
   }
-
 }
-
