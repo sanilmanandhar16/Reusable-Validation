@@ -61,6 +61,7 @@ export class HomeComponent {
     );
   }
 
+
   get usernameValidationMessage(): string | undefined {
     const usernameControl = this.userForm.get('username');
     if (usernameControl && usernameControl.touched) {
@@ -68,8 +69,8 @@ export class HomeComponent {
       if (username.length <= 2) {
         return 'The entered username is too short.';
       }
-      if(username.length >=10){
-        return 'Username cannot be more than 10 characters'
+      if(username.length >=20){
+        return 'Username cannot be more than 20 characters'
       }
     }
     return undefined;

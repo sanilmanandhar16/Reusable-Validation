@@ -34,7 +34,7 @@ export class ValidationService {
         ['invalidDateRange', { message: 'End date must be selected after start date' }],
 
     ]);
-    
+
     getValidatorErrorMessage = (validatorName: string, validatorErrors?: ValidationErrors): string | undefined => {
         const messageConfig = this.messages.get(validatorName);
         if (messageConfig) {
@@ -82,7 +82,7 @@ export class ValidationService {
         if (!value) {
             return { 'required': true };
         }
-        if (!/^[A-Z][a-zA-Z]*$/.test(value)) {
+        if (!/^[A-Z][a-zA-Z]*( [A-Z][a-zA-Z]*)*$/.test(value)) {
             return { 'invalidUsername': true };
         }
         return null;
