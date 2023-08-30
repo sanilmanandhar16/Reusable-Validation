@@ -31,7 +31,6 @@
    
     padding: 12px;
     background-color: #007bff;
-
     border-radius: 12px;
     color: #ffffff;
     border: none;
@@ -50,3 +49,25 @@
     color: red;
   }
   
+  .password-match-message {
+    color: green; 
+    font-size: 14px; 
+}
+
+
+.gender {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.gender label {
+  display: flex;
+  margin-right: 10px;
+}
+
+.gender input[type="radio"] {
+ display: flex;
+ flex-direction: column;
+}

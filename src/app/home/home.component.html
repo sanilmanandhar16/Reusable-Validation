@@ -16,6 +16,26 @@
         <input type="email" id="email" formControlName="email">
         <app-error-messages class="error-message" [control]="userForm.get('email')!"></app-error-messages> 
       </div>
+      <div class="gender">
+        <label>Gender:</label>
+        <div>
+          <label>
+            <input type="radio" formControlName="gender" value="male"> Male
+          </label>
+          <label>
+            <input type="radio" formControlName="gender" value="female"> Female
+          </label>
+          <label>
+            <input type="radio" formControlName="gender" value="other"> Other
+          </label>
+          <app-error-messages class="error-message" [control]="userForm.get('gender')!"></app-error-messages>
+        </div>
+      </div>
+      <div>
+        <label for="age">Age:</label>
+        <input type="number" id="age" formControlName="age">
+        <app-error-messages class="error-message" [control]="userForm.get('age')!"></app-error-messages>
+      </div>
 
       <div>
         <label for="startDate">Start Date:</label>
@@ -26,7 +46,7 @@
       <div>
         <label for="endDate">End Date:</label>
         <input type="date" id="endDate" formControlName="endDate">
-        <app-error-messages class="error-message" [control]="userForm.get('endDate')!"></app-error-messages>
+        <app-error-messages class="error-message" [control]="userForm.get('endDate')!" ></app-error-messages>
       </div>
 
 
@@ -39,11 +59,15 @@
       <div>
         <label for="confirmPassword">ConfirmPassword:</label>
         <input type="password" id="confirmPassword" formControlName="confirmPassword">
-        <app-error-messages class="error-message" [control]="userForm.get('confirmPassword')!"></app-error-messages>
+        <app-error-messages class="error-message" [control]="userForm.get('confirmPassword')!">
+
+          <div *ngIf="userForm.get('confirmPassword')?.hasError('passwordMatch')" class="password-match-message"></div>
+        </app-error-messages>
+        
       </div>
 
       <button type="submit" (click)="onSubmit()">Submit</button>
     </div>
   </form>
-  <button (click)="next()">Go To Next Page</button>
+ 
 </div>

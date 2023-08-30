@@ -6,11 +6,11 @@ import { AppComponent } from './app.component';
 import { ErrorMessagesComponent } from './error-messages/error-messages.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgIf } from '@angular/common';
-import { DynamicFormComponent } from './dynamic-form/dynamic-form.component';
+
 import { HomeComponent } from './home/home.component';
 
 @NgModule({
-  declarations: [AppComponent, DynamicFormComponent, HomeComponent,ErrorMessagesComponent],
+  declarations: [AppComponent, HomeComponent,ErrorMessagesComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

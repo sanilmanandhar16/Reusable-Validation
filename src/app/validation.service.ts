@@ -8,15 +8,14 @@ import { map } from 'rxjs/operators';
 })
 export class ValidationService {
 
-    getValidatorErrorMessage = (validatorName: string, validatorErrors?: ValidationErrors): string | undefined => {
-        const messageConfig = this.messages.get(validatorName);
-        if (messageConfig) {
-            const args = messageConfig.validatorErrorsKey?.map(name => validatorErrors?.[name]);
-            return args ? this.stringFormat(messageConfig.message, ...args) : messageConfig.message;
-        }
-        return undefined;
+    //to add some validation patterns
+    customValidators = {
+        patternPhoneNumber: /^[0-9]{10}$/,
+        dateRangeValidator: () => this.dateRangeValidator,
+        validEmailPattern: /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/,
     };
-
+    
+    //validation messages
     messages = new Map<string, { message: string, validatorErrorsKey?: string[] }>([
         ['required', { message: 'This field is required' }],
         ['invalidUsername', { message: 'First Letter must be capital and contain only letters' }],
@@ -27,6 +26,7 @@ export class ValidationService {
         ['patternPhoneNumber', { message: 'Phone number must be exactly 10 digits long' }],
         ['requiredTrue', { message: 'Gender must be selected' }],
         ['passwordMismatch', { message: 'Passwords do not match' }],
+        ['passwordMatch', { message: 'Passwords matched!' }],
         ['passwordUppercaseLowercase', { message: 'Password must contain both uppercase and lowercase letters' }],
         ['ageRange', { message: 'Age must be between 18 and 99', validatorErrorsKey: ['min', 'max'] }],
         ['emailTaken', { message: 'Email already Exists' }],
@@ -34,6 +34,15 @@ export class ValidationService {
         ['invalidDateRange', { message: 'End date must be selected after start date' }],
 
     ]);
+    
+    getValidatorErrorMessage = (validatorName: string, validatorErrors?: ValidationErrors): string | undefined => {
+        const messageConfig = this.messages.get(validatorName);
+        if (messageConfig) {
+            const args = messageConfig.validatorErrorsKey?.map(name => validatorErrors?.[name]);
+            return args ? this.stringFormat(messageConfig.message, ...args) : messageConfig.message;
+        }
+        return undefined;
+    };
 
     private stringFormat(template: string | undefined, ...args: any[]) {
         if (template) {
@@ -46,21 +55,28 @@ export class ValidationService {
         return undefined;
     }
 
-    customValidators = {
-        patternPhoneNumber: /^[0-9]{10}$/,
-        dateRangeValidator: () => this.dateRangeValidator,
-        validEmailPattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
-    };
-
-
     emailValidator = (control: FormControl): ValidationErrors | null => {
         const value = control.value;
-        if (!value || !!this.customValidators.validEmailPattern.test(value)) {
+        if (!value || !this.customValidators.validEmailPattern.test(value)) {
             return { 'email': true };
         }
         return null;
-    };
-
+     };
+  
+      emailAsyncValidator(existingEmails: string[]): (control: FormControl) => Observable<ValidationErrors | null> {
+        return (control: FormControl): Observable<ValidationErrors | null> => {
+            return of(control.value).pipe(
+                map(email => {
+                    if (existingEmails.includes(email)) {
+                        console.log('Email exists:', email);
+                        return { 'emailTaken': true };
+                    }
+                    return null;
+                })
+            );
+        };
+    }
+    
     usernameValidator(control: FormControl): ValidationErrors | null {
         const value = control.value;
         if (!value) {
@@ -90,12 +106,20 @@ export class ValidationService {
         return (formGroup: AbstractControl): ValidationErrors | null => {
             const control1 = formGroup.get(controlName1);
             const control2 = formGroup.get(controlName2);
-
+    
             if (control1 && control2) {
                 const startDate = control1.value;
                 const endDate = control2.value;
-
-                if (startDate && endDate && new Date(startDate) > new Date(endDate)) {
+    
+                if (!startDate || !endDate) {
+                  
+                    if (!startDate) {
+                        control1.setErrors({ 'required': true });
+                    }
+                    if (!endDate) {
+                        control2.setErrors({ 'required': true });
+                    }
+                } else if (new Date(startDate) > new Date(endDate)) {
                     control2.setErrors({ 'invalidDateRange': true });
                 } else {
                     control2.setErrors(null);
@@ -104,6 +128,7 @@ export class ValidationService {
             return null;
         };
     }
+    
 
     passwordUppercaseLowercaseValidator(control: FormControl): ValidationErrors | null {
         const password = control.value;
@@ -139,24 +164,11 @@ export class ValidationService {
             const passwordControl = form.get('password');
             if (passwordControl && control.value !== passwordControl.value) {
                 return { 'passwordMismatch': true };
+            }else{
+                return{'passwordMatch': true}
             }
         }
         return null;
-    }
-
-
-    emailAsyncValidator(existingEmails: string[]): (control: FormControl) => Observable<ValidationErrors | null> {
-        return (control: FormControl): Observable<ValidationErrors | null> => {
-            return of(control.value).pipe(
-                map(email => {
-                    if (existingEmails.includes(email)) {
-                        console.log('Email exists:', email);
-                        return { 'emailTaken': true };
-                    }
-                    return null;
-                })
-            );
-        };
     }
 }
 
